@@ -1,0 +1,30 @@
+deployment with helm chart:
+===========================
+https://github.com/jenkinsci/helm-charts/blob/jenkins-5.8.136/charts/jenkins/README.md
+helm repo add jenkins https://charts.jenkins.io
+helm repo update
+
+raboruah@INBAWN196157:~$ helm version
+version.BuildInfo{Version:"v3.19.0",...
+
+************************************************************************************
+https://www.jenkins.io/doc/book/installing/kubernetes/#install-jenkins-with-helm-v3:
+*************************************************************************************
+Step 1: Create a Namespace for Jenkins.
+kubectl create namespace devops-tools
+
+Step 2: Create a 'jenkins-01-serviceAccount.yaml' file
+raboruah@INBAWN196157:~/jenkins$ a jenkins-01-serviceAccount.yaml
+clusterrole.rbac.authorization.k8s.io/jenkins-admin created
+serviceaccount/jenkins-admin created
+clusterrolebinding.rbac.authorization.k8s.io/jenkins-admin created
+
+Step 3: Create 'jenkins-02-volume.yaml
+raboruah@INBAWN196157:~/jenkins$ a jenkins-02-volume.yaml
+storageclass.storage.k8s.io/local-storage created
+persistentvolume/jenkins-pv-volume created
+persistentvolumeclaim/jenkins-pv-claim created
+
+As the 'local' storage class requires the node selector, you need to specify the worker node name correctly for the Jenkins pod to get scheduled in the specific node.
+If the pod gets deleted or restarted, the data will get persisted in the node volume. However, if the node gets deleted, you will lose all the data.
+
