@@ -1,1 +1,31 @@
+https://github.com/jenkinsci/helm-charts:
+
+raboruah@INBAWN196157:~/jenkins$ git clone --single-branch --branch jenkins-5.8.136 https://github.com/jenkinsci/helm-charts.git
+Cloning into 'helm-charts'...
+remote: Enumerating objects: 10665, done.
+remote: Counting objects: 100% (177/177), done.
+remote: Compressing objects: 100% (83/83), done.
+remote: Total 10665 (delta 143), reused 94 (delta 92), pack-reused 10488 (from 4)
+Receiving objects: 100% (10665/10665), 2.93 MiB | 1.84 MiB/s, done.
+Resolving deltas: 100% (7790/7790), done.
+Note: switching to '306af378a9b7beac56705b941676ecfb7a77b3fb'.
+
+You are in 'detached HEAD' state. You can look around, make experimental
+changes and commit them, and you can discard any commits you make in this
+state without impacting any branches by switching back to a branch.
+
+If you want to create a new branch to retain commits you create, you may
+do so (now or later) by using -c with the switch command. Example:
+
+  git switch -c <new-branch-name>
+
+Or undo this operation with:
+
+  git switch -
+
+Turn off this advice by setting config variable advice.detachedHead to false
+
+Follow the details at: https://www.jenkins.io/projects/jcasc/
+
+
 
