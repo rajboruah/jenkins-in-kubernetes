@@ -28,3 +28,76 @@ persistentvolumeclaim/jenkins-pv-claim created
 As the 'local' storage class requires the node selector, you need to specify the worker node name correctly for the Jenkins pod to get scheduled in the specific node.
 If the pod gets deleted or restarted, the data will get persisted in the node volume. However, if the node gets deleted, you will lose all the data.
 
+Step 4: Create a Deployment file named 'jenkins-03-deployment.yaml'
+raboruah@INBAWN196157:~/jenkins$ a jenkins-03-deployment.yaml
+deployment.apps/jenkins created
+(Use explicit jenkins version/tag if needed from: https://hub.docker.com/r/jenkins/jenkins/tags)
+
+raboruah@INBAWN196157:~/jenkins$ p
+NAME                     READY   STATUS    RESTARTS   AGE
+jenkins-64d8c5cd-s7wfj   1/1     Running   0          9m38s
+
+It took ~9mins.
+
+raboruah@INBAWN196157:~/jenkins$ k get all
+NAME                         READY   STATUS    RESTARTS   AGE
+pod/jenkins-64d8c5cd-s7wfj   1/1     Running   0          10m
+
+NAME                      READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/jenkins   1/1     1            1           10m
+
+NAME                               DESIRED   CURRENT   READY   AGE
+replicaset.apps/jenkins-64d8c5cd   1         1         1       10m
+
+raboruah@INBAWN196157:~$ k logs jenkins-64d8c5cd-s7wfj
+..
+..
+[LF]> Jenkins initial setup is required. An admin user has been created and a password generated.
+[LF]> Please use the following password to proceed to installation:
+[LF]>
+[LF]> 399107e4b9c6445cbd281a08ba2e3ae6
+[LF]>
+[LF]> This may also be found at: /var/jenkins_home/secrets/initialAdminPassword
+
+raboruah@INBAWN196157:~/jenkins$ kubectl exec -it jenkins-64d8c5cd-s7wfj -- /bin/bash
+jenkins@jenkins-64d8c5cd-s7wfj:/$ ls
+bin   dev  home  lib64  mnt  proc          root  sbin  sys  usr
+boot  etc  lib   media  opt  product_uuid  run   srv   tmp  var
+jenkins@jenkins-64d8c5cd-s7wfj:/$
+jenkins@jenkins-64d8c5cd-s7wfj:~$ ls /var/jenkins_home/
+config.xml                     jenkins.telemetry.Correlator.xml  plugins                   secrets      war
+copy_reference_file.log        jobs                              secret.key                userContent
+hudson.model.UpdateCenter.xml  nodeMonitors.xml                  secret.key.not-so-secret  users
+
+If you don’t want the local storage persistent volume, you can replace the volume definition in the deployment with the host directory as shown below.
+
+Accessing Jenkins Using Kubernetes Service:
+###########################################
+
+Create 'jenkins-04-service.yaml':
+raboruah@INBAWN196157:~$ a jenkins-04-service.yaml
+service/jenkins-service created
+
+http://127.0.0.1:32000/ > Failed to load the jenkins UI.
+
+Check which port the container app is listening on:
+raboruah@INBAWN196157:~$ kubectl get pod jenkins-64d8c5cd-s7wfj --template='{{(index (index .spec.containers 0).ports 0).containerPort}}{{"\n"}}'
+8080
+
+raboruah@INBAWN196157:~$ kubectl port-forward pods/jenkins-64d8c5cd-s7wfj 8080:8080
+Forwarding from 127.0.0.1:8080 -> 8080
+Forwarding from [::1]:8080 -> 8080
+
+http://127.0.0.1:8080/ (SUCCESS):
+
+
+
+
+
+
+
+
+
+
+
+
